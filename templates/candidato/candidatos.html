@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<style>
+    .voto:hover{
+        background-color: aqua;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% load static %}
+
+{% block title %}Candidatos{% endblock %}
+
+{% block nav %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Academia</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Listas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Candidatos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="alert alert-primary text-center" role="alert">
+    Bienvenido {{ user.first_name }}
+</div>
+<h2>Candidatos</h2>
+<main class="Container d-flex flex-wrap justify-content-center">
+    {% for candidato in listas %}
+        <div class="card voto mb-3 m-3" style="max-width: 300px;">
+            <div class="row" onclick="votar('{{ estudiante.id }}','{{ candidato }}','{{ candidato.id }}')">
+                <div class="col-md-8">
+                    <img src="{{ candidato.foto.url }}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ candidato.nombre }}</h5>
+                        <p class="card-text">{{ candidato.lema }}</p>
+                        <!-- <form method="POST" action="{% url 'votar' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="candidato_id" value="{{ candidato.id }}">
+                            <button class="btn btn-primary btn-sm" type="submit" name="tipo_voto" value="voto">Votar</button>
+                            <button class="btn btn-secondary btn-sm" type="submit" name="tipo_voto" value="nulo">Voto Nulo</button>
+                            <button class="btn btn-light btn-sm" type="submit" name="tipo_voto" value="blanco">Voto en Blanco</button>
+                        </form> -->
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Detalles
+            </button>
+        </div>
+        
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Representantes</h1>
+                    </div>
+                    <div class="modal-body">
+                        {% for representante in candidatos %}
+                            {% if representante.lista.id == candidato.id %}
+                                <div class="card mb-3 m-3" style="max-width: 300px;">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <img src="{{ representante.foto.url }}" alt="" width="100px">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <p class="card-text">{{ representante.candidato.user.first_name }}</p>
+                                                <p class="card-text">{{ representante.dignidad }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function votar(estudianteID, lista, listaId) {
+        let darVoto = confirm(`esta seguro de votar por: ${lista}`)
+        if (darVoto){
+            location.href = `/?id_est=${estudianteID}&id_lista=${listaId}`
+        }
+        alert(darVoto)
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+{% endblock %}
