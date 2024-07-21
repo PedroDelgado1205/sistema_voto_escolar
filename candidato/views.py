@@ -15,11 +15,12 @@ def candidatos(request):
         'estudiante': Estudiante.objects.get(user_id=id_usuario),
     }
     print(context['estudiante'])
-    if request.GET.get('id_est') and request.GET.get('id_lista'):
-        id_est, id_lista = request.GET['id_est'], request.GET['id_lista']
-        print('estudiante: ', id_est)
-        print('lista: ', id_lista)
-        voto = Voto(voto_de = id_est, voto_por = id_lista)
-        voto.save()
-        return redirect('/')
+    # if request.GET.get('id_est') and request.GET.get('id_lista'):
+    #     print(request.GET.get('id_est') and request.GET.get('id_lista'))
+    #     id_est, id_lista = request.GET['id_est'], request.GET['id_lista']
+    #     print('estudiante: ', id_est)
+    #     print('lista: ', id_lista)
+    #     voto = Voto(voto_de = id_est, voto_por = id_lista)
+    #     voto.save()
+    #     return redirect('/')
     return render(request, 'candidato/candidatos.html', context)
